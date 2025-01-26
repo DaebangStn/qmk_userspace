@@ -1,4 +1,24 @@
 CompileFlags:
-  Add: [-Wno-unknown-attributes, -Wno-maybe-uninitialized, -Wno-unknown-warning-option]
-  Remove: [-W*, -mmcu=*, -mcpu=*, -mfpu=*, -mfloat-abi=*, -mno-unaligned-access, -mno-thumb-interwork, -mcall-prologues]
+  Add:
+    - "-I${QMK_HOME}/quantum"
+    - "-I${QMK_HOME}/quantum/keymap_extras"
+    - "-I${QMK_HOME}/quantum/keycodes"
+    - "-I${QMK_HOME}/quantum/sequencer"
+    - "-I${QMK_HOME}/platforms/avr"
+    - "-I${QMK_HOME}/platforms/chibios"
+    - "-I${QMK_HOME}/platforms"
+    - "-I${QMK_HOME}/keyboards"
+    - "-I${QMK_HOME}/tmk_core"
+    - "-Wno-unknown-attributes"
+    - "-Wno-maybe-uninitialized"
+    - "-Wno-unknown-warning-option"
+  Remove:
+    - "-W*"
+    - "-mmcu=*"
+    - "-mcpu=*"
+    - "-mfpu=*"
+    - "-mfloat-abi=*"
+    - "-mno-unaligned-access"
+    - "-mno-thumb-interwork"
+    - "-mcall-prologues"
   Compiler: clang
