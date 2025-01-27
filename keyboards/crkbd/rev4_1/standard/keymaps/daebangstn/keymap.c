@@ -32,6 +32,7 @@ static const tap_dance_tap_hold_t PROGMEM td_bksp_f12 = {KC_BSPC, KC_F12, 0};
 // Separate enum for tap dance
 enum {
     TD_CONSOLE,
+    TD_QW,
     TD_QUOTE_DEL,
     TD_BKSP_F12,
 };
@@ -136,6 +137,7 @@ void raw_hid_receive(uint8_t *data, uint8_t length) {
 
 tap_dance_action_t tap_dance_actions[] = {
     [TD_CONSOLE] = ACTION_TAP_DANCE_FN(debug_tap_dance),
+    [TD_QW] = ACTION_TAP_DANCE_TAP_HOLD(KC_Q, KC_W),
     [TD_QUOTE_DEL] = ACTION_TAP_DANCE_TAP_HOLD(KC_QUOT, KC_DEL),
     [TD_BKSP_F12] = ACTION_TAP_DANCE_TAP_HOLD(KC_BSPC, KC_F12),
 };
