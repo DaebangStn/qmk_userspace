@@ -21,6 +21,7 @@ typedef struct {
 
 // Forward declare the tap dance actions array
 tap_dance_action_t tap_dance_actions[];
+static bool is_hangul_mode = false;
 
 // Define the static variables with PROGMEM
 static const tap_dance_tap_hold_t PROGMEM td_quot_del = {KC_QUOT, KC_DEL, 0};
@@ -84,6 +85,25 @@ tap_dance_action_t tap_dance_actions[] = {
     [TD_QUOTE_DEL] = ACTION_TAP_DANCE_TAP_HOLD(KC_QUOT, KC_DEL),
     [TD_BKSP_F12] = ACTION_TAP_DANCE_TAP_HOLD(KC_BSPC, KC_F12),
 };
+
+void raw_hid_receive(uint8_t *data, uint8_t length) {
+    // Assume the first byte of data represents the state
+    if (length >= 1) {
+        switch (data[0]) {
+            case 1:  // Hangul mode
+                DEBUG_CONSOLE("Hangul mode\n");
+                is_hangul_mode = true;
+                break;
+            case 0:  // English mode
+                DEBUG_CONSOLE("English mode\n");
+                is_hangul_mode = false;
+                break;
+            default:
+                DEBUG_CONSOLE("Unknown mode\n");
+                break;  // Handle additional states if necessary
+        }
+    }
+}
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT_split_3x6_3_ex2(
