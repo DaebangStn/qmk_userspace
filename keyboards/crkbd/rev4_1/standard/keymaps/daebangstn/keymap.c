@@ -33,6 +33,7 @@ static const tap_dance_tap_hold_t PROGMEM td_bksp_f12 = {KC_BSPC, KC_F12, 0};
 enum {
     TD_CONSOLE,
     TD_QW,
+    TD_F1_TILDE,
     TD_QUOTE_DEL,
     TD_BKSP_F12,
 };
@@ -100,6 +101,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     tap_dance_action_t *action;
 
     switch (keycode) {
+        case TD(TD_QW):
+        case TD(TD_F1_TILDE):
         case TD(TD_QUOTE_DEL):
         case TD(TD_BKSP_F12):
             action = &tap_dance_actions[QK_TAP_DANCE_GET_INDEX(keycode)];
@@ -138,6 +141,7 @@ void raw_hid_receive(uint8_t *data, uint8_t length) {
 tap_dance_action_t tap_dance_actions[] = {
     [TD_CONSOLE] = ACTION_TAP_DANCE_FN(debug_tap_dance),
     [TD_QW] = ACTION_TAP_DANCE_TAP_HOLD(KC_Q, KC_W),
+    [TD_F1_TILDE] = ACTION_TAP_DANCE_TAP_HOLD(KC_TILD, KC_F1),
     [TD_QUOTE_DEL] = ACTION_TAP_DANCE_TAP_HOLD(KC_QUOT, KC_DEL),
     [TD_BKSP_F12] = ACTION_TAP_DANCE_TAP_HOLD(KC_BSPC, KC_F12),
 };
@@ -150,7 +154,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         LSFT_T(KC_SPC), MO(1), KC_LCTL,                                                LALT_T(KC_SPC), KC_LSFT, LCTL_T(KC_LGUI)
         ),
     [1] = LAYOUT_split_3x6_3_ex2(
-        KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_PGUP,      KC_EQUAL, KC_F7, KC_F8, KC_F9, KC_F10, KC_F11, TD(TD_BKSP_F12),
+        TD(TD_F1_TILDE), KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_PGUP,      KC_EQUAL, KC_F7, KC_F8, KC_F9, KC_F10, KC_F11, TD(TD_BKSP_F12),
         KC_DOT, KC_1, KC_2, KC_3, KC_4, KC_5, KC_PGDN,          KC_MINS, KC_6, KC_7, KC_8, KC_9, KC_0, KC_ENT, KC_PSCR,
         KC_PSCR, KC_INS, KC_DEL, KC_HOME, KC_END,                         KC_LCBR, KC_RCBR, KC_LPRN, KC_RPRN, KC_LBRC, KC_RBRC,
         KC_LSFT, KC_NO, KC_LCTL,                                                KC_SPC, KC_LSFT, KC_LCTL
