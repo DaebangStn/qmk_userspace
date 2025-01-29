@@ -1,6 +1,7 @@
 #include "color.h"
 #include "keycodes.h"
 #include "keymap_us.h"
+#include "process_tap_dance.h"
 #include "quantum_keycodes.h"
 #include "raw_hid.h"
 #include QMK_KEYBOARD_H
@@ -36,6 +37,8 @@ enum {
     TD_F1_TILDE,
     TD_QUOTE_DEL,
     TD_BKSP_F12,
+    TD_HANGUL_ENTER,
+    TD_MO_13,
 };
 
 // Separate enum for custom keycodes (if needed)
@@ -72,13 +75,8 @@ void tap_dance_tap_hold_reset(tap_dance_state_t *state, void *user_data) {
 layer_state_t layer_state_set_user(layer_state_t state) {
     switch (get_highest_layer(state)) {
         case 0:
-            if (is_hangul_mode) {
-                DEBUG_CONSOLE("Base layer with Hangul mode\n");
-                rgblight_sethsv(HSV_TURQUOISE);    // Green for base layer
-            } else {
-                DEBUG_CONSOLE("Base layer with English mode\n");
-                rgblight_sethsv(HSV_GREEN);      // Red for other layers
-            }
+            DEBUG_CONSOLE("Base layer with English mode\n");
+            rgblight_sethsv(HSV_GREEN);      // Red for other layers
             break;
         case 1:
             DEBUG_CONSOLE("Layer 1\n");
@@ -144,19 +142,27 @@ tap_dance_action_t tap_dance_actions[] = {
     [TD_F1_TILDE] = ACTION_TAP_DANCE_TAP_HOLD(KC_TILD, KC_F1),
     [TD_QUOTE_DEL] = ACTION_TAP_DANCE_TAP_HOLD(KC_QUOT, KC_DEL),
     [TD_BKSP_F12] = ACTION_TAP_DANCE_TAP_HOLD(KC_BSPC, KC_F12),
+    [TD_HANGUL_ENTER] = ACTION_TAP_DANCE_DOUBLE(KC_LNG1, KC_ENT),
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT_split_3x6_3_ex2(
         KC_ESC, KC_Q, KC_W, KC_E, KC_R, KC_T, KC_UP,    KC_LEFT, KC_Y, KC_U, KC_I, KC_O, KC_P, KC_BSPC,
         KC_TAB, KC_A, KC_S, KC_D, KC_F, KC_G, KC_DOWN,          KC_RGHT, KC_H, KC_J, KC_K, KC_L, KC_SCLN, KC_ENT,
-        KC_LNG1, KC_Z, KC_X, KC_C, KC_V, KC_B,                      KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, TD(TD_QUOTE_DEL),
-        LSFT_T(KC_SPC), MO(1), KC_LCTL,                                                LALT_T(KC_SPC), KC_LSFT, LCTL_T(KC_LGUI)
+        TD(TD_HANGUL_ENTER), KC_Z, KC_X, KC_C, KC_V, KC_B,                      KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, TD(TD_QUOTE_DEL),
+        LSFT_T(KC_SPC), MO(1), KC_LCTL,                                                LALT_T(KC_SPC), KC_LSFT, TG(2)
+        // LSFT_T(KC_SPC), MO(1), KC_LCTL,                                                LALT_T(KC_SPC), KC_LSFT, LCTL_T(KC_LGUI)
         ),
     [1] = LAYOUT_split_3x6_3_ex2(
         TD(TD_F1_TILDE), KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_PGUP,      KC_EQUAL, KC_F7, KC_F8, KC_F9, KC_F10, KC_F11, TD(TD_BKSP_F12),
-        KC_DOT, KC_1, KC_2, KC_3, KC_4, KC_5, KC_PGDN,          KC_MINS, KC_6, KC_7, KC_8, KC_9, KC_0, KC_ENT, KC_PSCR,
-        KC_PSCR, KC_INS, KC_DEL, KC_HOME, KC_END,                         KC_LCBR, KC_RCBR, KC_LPRN, KC_RPRN, KC_LBRC, KC_RBRC,
-        KC_LSFT, KC_NO, KC_LCTL,                                                KC_SPC, KC_LSFT, KC_LCTL
+        KC_DOT, KC_1, KC_2, KC_3, KC_4, KC_5, KC_PGDN,          KC_MINS, KC_6, KC_7, KC_8, KC_9, KC_0, KC_ENT,
+        KC_PSCR, KC_BSLS, KC_INS, KC_DEL, KC_HOME, KC_END,                         KC_LCBR, KC_RCBR, KC_LPRN, KC_RPRN, KC_LBRC, KC_RBRC,
+        LSFT_T(KC_SPC), MO(1), KC_LCTL,                                                LALT_T(KC_SPC), KC_LSFT, TG(2)
+        ),
+    [2] = LAYOUT_split_3x6_3_ex2(
+        KC_ESC, KC_Q, KC_W, KC_F, KC_P, KC_B, KC_UP,    KC_LEFT, KC_J, KC_L, KC_U, KC_Y, KC_SCLN, KC_BSPC,
+        KC_TAB, KC_A, KC_R, KC_S, KC_T, KC_G, KC_DOWN,          KC_RGHT, KC_M, KC_N, KC_E, KC_I, KC_O, KC_ENT,
+        TD(TD_HANGUL_ENTER), KC_Z, KC_X, KC_C, KC_D, KC_V,                      KC_K, KC_H, KC_COMM, KC_DOT, KC_SLSH, TD(TD_QUOTE_DEL),
+        LSFT_T(KC_SPC), MO(1), KC_LCTL,                                                LALT_T(KC_SPC), KC_LSFT, TG(2)
         )
 };
